@@ -17,8 +17,8 @@ app.use(middlewareLogResponses);
 app.use("/app", middlewareLogFileserverHits, express.static("./src/app"));
 
 app.get("/api/healthz", handlerReadiness);
-app.get("/api/metrics", handlerMetrics);
-app.get("/api/reset", handlerReset);
+app.get("/admin/metrics", handlerMetrics);
+app.get("/admin/reset", handlerReset);
 
 // Start the server, listening for incoming requests on the specified port
 app.listen(PORT, () => {
