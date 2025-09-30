@@ -4,6 +4,7 @@ import { middlewareLogFileserverHits, middlewareLogResponses } from "./app/api/m
 import { handlerReset } from "./app/api/reset.js";
 import { handlerMetrics } from "./app/api/metrics.js";
 import { handlerValidateChirp } from "./app/api/validate_chirp.js";
+import { errorHandler } from "./app/api/middleware.js";
 
 const app = express();
 const PORT = 8080;
@@ -14,9 +15,9 @@ const PORT = 8080;
 
 // Use the middleware on the application leve, it will subsccribe to all finish events
 app.use(middlewareLogResponses);
+app.use(express.json());
 
 app.use("/app", middlewareLogFileserverHits, express.static("./src/app"));
-app.use(express.json());
 app.get("/api/healthz", handlerReadiness);
 app.get("/admin/metrics", handlerMetrics);
 app.post("/admin/reset", handlerReset);
@@ -28,3 +29,5 @@ app.post("/api/validate_chirp", handlerValidateChirp);
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
+
+app.use(errorHandler);

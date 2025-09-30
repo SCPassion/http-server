@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import { respondWithJSON, respondWithError } from "./json.js";
+import { Request, Response, NextFunction } from "express";
+import { respondWithJSON } from "./json.js";
 
-export async function handlerValidateChirp(req: Request, res: Response) {
+export async function handlerValidateChirp(req: Request, res: Response, next: NextFunction) {
     const chirp = req.body;
     try {
         if (!chirp.body) {
@@ -10,12 +10,19 @@ export async function handlerValidateChirp(req: Request, res: Response) {
         if (chirp.body.length > 140) {
             throw new Error("Chirp is too long");
         }
-        respondWithJSON(res, 200, { valid: true });
-    } catch (error) {
-        if (error instanceof Error) {
-            respondWithError(res, 400, error.message);
-        } else {
-            respondWithError(res, 400, "Invalid JSON");
+
+        const splittedChirp = chirp.body.split(" ");
+        const badWords = ["kerfuffle", "sharbert", "fornax"];
+
+        for (let i = 0; i < splittedChirp.length; i++) {
+            if (badWords.includes(splittedChirp[i].toLowerCase())) {
+                splittedChirp[i] = "****";
+            }
         }
+
+        respondWithJSON(res, 200, { cleanedBody: splittedChirp.join(" ") });
+    } catch (error) {
+        next(error as Error);
+        return;
     }
 }
