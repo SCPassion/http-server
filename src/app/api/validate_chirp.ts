@@ -1,28 +1,33 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response } from "express";
+
 import { respondWithJSON } from "./json.js";
 
-export async function handlerValidateChirp(req: Request, res: Response, next: NextFunction) {
-    const chirp = req.body;
-    try {
-        if (!chirp.body) {
-            throw new Error("Invalid JSON");
-        }
-        if (chirp.body.length > 140) {
-            throw new Error("Chirp is too long");
-        }
+export async function handlerChirpsValidate(req: Request, res: Response) {
+  type parameters = {
+    body: string;
+  };
 
-        const splittedChirp = chirp.body.split(" ");
-        const badWords = ["kerfuffle", "sharbert", "fornax"];
+  const params: parameters = req.body;
 
-        for (let i = 0; i < splittedChirp.length; i++) {
-            if (badWords.includes(splittedChirp[i].toLowerCase())) {
-                splittedChirp[i] = "****";
-            }
-        }
+  const maxChirpLength = 140;
+  if (params.body.length > maxChirpLength) {
+    throw new Error("Chirp is too long");
+  }
 
-        respondWithJSON(res, 200, { cleanedBody: splittedChirp.join(" ") });
-    } catch (error) {
-        next(error as Error);
-        return;
+  const words = params.body.split(" ");
+
+  const badWords = ["kerfuffle", "sharbert", "fornax"];
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
+    const loweredWord = word.toLowerCase();
+    if (badWords.includes(loweredWord)) {
+      words[i] = "****";
     }
+  }
+
+  const cleaned = words.join(" ");
+
+  respondWithJSON(res, 200, {
+    cleanedBody: cleaned,
+  });
 }

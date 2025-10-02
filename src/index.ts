@@ -1,33 +1,38 @@
 import express from "express";
+
+import { middlewareLogResponse } from "./app/api/middleware.js";
+import { middlewareMetricsInc } from "./app/api/middleware.js";
+import { errorMiddleWare } from "./app/api/middleware.js";
 import { handlerReadiness } from "./app/api/readiness.js";
-import { middlewareLogFileserverHits, middlewareLogResponses } from "./app/api/middleware.js";
-import { handlerReset } from "./app/api/reset.js";
 import { handlerMetrics } from "./app/api/metrics.js";
-import { handlerValidateChirp } from "./app/api/validate_chirp.js";
-import { errorHandler } from "./app/api/middleware.js";
+import { handlerReset } from "./app/api/reset.js";
+import { handlerChirpsValidate } from "./app/api/validate_chirp.js";
+
 
 const app = express();
 const PORT = 8080;
 
-// Serve static files from the src/app directory
-// app.use("/app" => http://localhost:8080/app/index.html
-// express.static("./src/app") => serve static files from the src/app directory
-
-// Use the middleware on the application leve, it will subsccribe to all finish events
-app.use(middlewareLogResponses);
+app.use(middlewareLogResponse);
 app.use(express.json());
 
-app.use("/app", middlewareLogFileserverHits, express.static("./src/app"));
-app.get("/api/healthz", handlerReadiness);
-app.get("/admin/metrics", handlerMetrics);
-app.post("/admin/reset", handlerReset);
+app.use("/app", middlewareMetricsInc, express.static("./src/app"));
 
+app.get("/api/healthz", (req, res, next) => {
+  Promise.resolve(handlerReadiness(req, res)).catch(next);
+});
+app.get("/admin/metrics", (req, res, next) => {
+  Promise.resolve(handlerMetrics(req, res)).catch(next);
+});
+app.post("/admin/reset", (req, res, next) => {
+  Promise.resolve(handlerReset(req, res)).catch(next);
+});
 
-app.post("/api/validate_chirp", handlerValidateChirp);
+app.post("/api/validate_chirp", (req, res, next) => {
+  Promise.resolve(handlerChirpsValidate(req, res)).catch(next);
+});
 
-// Start the server, listening for incoming requests on the specified port
+app.use(errorMiddleWare);
+
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
-
-app.use(errorHandler);

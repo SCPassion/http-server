@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import { APIConfig } from "../../config.js";
+import { config } from "../../config.js";
 
 export async function handlerMetrics(_: Request, res: Response) {
     res.set({"Content-Type": "text/html", "charset": "utf-8"});
     res.status(200).send(`<html>
     <body>
         <h1>Welcome, Chirpy Admin</h1>
-        <p>Chirpy has been visited ${APIConfig.fileserverHits} times!</p>
+        <p>Chirpy has been visited ${config.fileserverHits} times!</p>
     </body>
     </html>`);
 }

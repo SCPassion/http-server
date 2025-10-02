@@ -1,35 +1,42 @@
-import { NextFunction, Response, Request } from "express";
-import { APIConfig } from "../../config.js";
+import type { Request, Response, NextFunction } from "express";
+import { config } from "../../config.js";
 import { respondWithError } from "./json.js";
 
-export function middlewareLogResponses(
+export function middlewareLogResponse(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   res.on("finish", () => {
     const statusCode = res.statusCode;
+
     if (statusCode >= 300) {
       console.log(`[NON-OK] ${req.method} ${req.url} - Status: ${statusCode}`);
     }
   });
+
   next();
 }
 
-export function middlewareLogFileserverHits(
-  req: Request,
-  res: Response,
-  next: NextFunction
+export function middlewareMetricsInc(
+  _: Request,
+  __: Response,
+  next: NextFunction,
 ) {
-  APIConfig.fileserverHits++;
+  config.fileserverHits++;
   next();
 }
 
+export function errorMiddleWare(
+  err: Error,
+  _: Request,
+  res: Response,
+  __: NextFunction,
+) {
+  let statusCode = 500;
+  let message = "Something went wrong on our end";
 
-export function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
-  const statusCode = 500;
-    const message = "Something went wrong on our end";
+  console.log(err.message);
 
-    console.error(err.message);
-    respondWithError(res, statusCode, message);
+  respondWithError(res, statusCode, message);
 }
