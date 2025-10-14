@@ -1,9 +1,12 @@
-import { drizzle } from "drizzle-orm/node-postgres";
 import postgres from "postgres";
+import {migrate} from "drizzle-orm/postgres-js/migrator"
+import { drizzle } from "drizzle-orm/postgres-js";
 
 import * as schema from "./schema";
 import { config } from "../config";
 
-const client = postgres(config.dbURL);
+const migrationClient = postgres(config.db.url, {max: 1});
 
-export const db = drizzle(client, { schema });
+await migrate(drizzle(migrationClient), config.db.migrationConfig);
+
+export const db = drizzle(migrationClient, { schema });

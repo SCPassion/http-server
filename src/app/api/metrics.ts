@@ -6,7 +6,7 @@ export async function handlerMetrics(_: Request, res: Response) {
     res.status(200).send(`<html>
     <body>
         <h1>Welcome, Chirpy Admin</h1>
-        <p>Chirpy has been visited ${config.fileserverHits} times!</p>
+        <p>Chirpy has been visited ${config.api.fileserverHits} times!</p>
     </body>
     </html>`);
 }
