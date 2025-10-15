@@ -8,6 +8,20 @@
       "when": 1760344170056,
       "tag": "0000_last_spectrum",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1760510491064,
+      "tag": "0001_tricky_punisher",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1760510678318,
+      "tag": "0002_legal_venus",
+      "breakpoints": true
     }
   ]
 }
