@@ -8,6 +8,7 @@ import { handlerMetrics } from "./app/api/metrics.js";
 import { handlerReset } from "./app/api/reset.js";
 import { handlerChirpsValidate } from "./app/api/validate_chirp.js";
 import { config } from "./config.js";
+import { handleCreateUser } from "./app/api/users.js";
 
 
 const app = express();
@@ -29,6 +30,10 @@ app.post("/admin/reset", (req, res, next) => {
 
 app.post("/api/validate_chirp", (req, res, next) => {
   Promise.resolve(handlerChirpsValidate(req, res)).catch(next);
+});
+
+app.post("/api/users", (req, res, next) => {
+  Promise.resolve(handleCreateUser(req, res)).catch(next);
 });
 
 app.use(errorMiddleWare);

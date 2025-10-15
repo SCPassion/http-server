@@ -2,8 +2,8 @@ import postgres from "postgres";
 import {migrate} from "drizzle-orm/postgres-js/migrator"
 import { drizzle } from "drizzle-orm/postgres-js";
 
-import * as schema from "./schema";
-import { config } from "../config";
+import * as schema from "./schema.js";
+import { config } from "../config.js";
 
 const migrationClient = postgres(config.db.url, {max: 1});
 
