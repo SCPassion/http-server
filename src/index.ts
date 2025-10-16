@@ -8,7 +8,7 @@ import { handlerMetrics } from "./app/api/metrics.js";
 import { handlerReset } from "./app/api/reset.js";
 import { handlerChirpsValidate } from "./app/api/validate_chirp.js";
 import { config } from "./config.js";
-import { handleCreateUser } from "./app/api/users.js";
+import { handleCreateUser, handleLoginUser } from "./app/api/users.js";
 import { handleCreateChirp, handleGetAllChirps, handleGetChirpById } from "./app/api/chirps.js";
 
 
@@ -35,6 +35,10 @@ app.post("/api/validate_chirp", (req, res, next) => {
 
 app.post("/api/users", (req, res, next) => {
   Promise.resolve(handleCreateUser(req, res)).catch(next);
+});
+
+app.post("/api/login", (req, res, next) => {
+  Promise.resolve(handleLoginUser(req, res)).catch(next);
 });
 
 app.post("/api/chirps", (req, res, next) => {

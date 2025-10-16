@@ -22,6 +22,13 @@
       "when": 1760510678318,
       "tag": "0002_legal_venus",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1760597146191,
+      "tag": "0003_thick_groot",
+      "breakpoints": true
     }
   ]
 }
