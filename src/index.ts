@@ -9,7 +9,7 @@ import { handlerReset } from "./app/api/reset.js";
 import { handlerChirpsValidate } from "./app/api/validate_chirp.js";
 import { config } from "./config.js";
 import { handleCreateUser } from "./app/api/users.js";
-import { handleCreateChirp } from "./app/api/chirps.js";
+import { handleCreateChirp, handleGetAllChirps, handleGetChirpById } from "./app/api/chirps.js";
 
 
 const app = express();
@@ -39,6 +39,14 @@ app.post("/api/users", (req, res, next) => {
 
 app.post("/api/chirps", (req, res, next) => {
   Promise.resolve(handleCreateChirp(req, res)).catch(next);
+});
+
+app.get("/api/chirps", (req, res, next) => {
+  Promise.resolve(handleGetAllChirps(req, res)).catch(next);
+});
+
+app.get("/api/chirps/:chirpId", (req, res, next) => {
+  Promise.resolve(handleGetChirpById(req, res)).catch(next);
 });
 
 app.use(errorMiddleWare);
