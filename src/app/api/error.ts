@@ -22,4 +22,10 @@ class UnauthorizedError extends Error {
     }
 }
 
+export class UserNotAuthenticatedError extends Error {
+    constructor(message: string) {
+      super(message);
+    }
+  }
+
 export { BadRequestError, NotFoundError, ForbiddenError, UnauthorizedError };
